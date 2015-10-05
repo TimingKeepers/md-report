@@ -1,0 +1,37 @@
+[file_prefs]
+final_new_line=true
+ensure_convert_new_lines=false
+strip_trailing_spaces=false
+replace_tabs=false
+
+[indentation]
+indent_width=4
+indent_type=1
+indent_hard_tab_width=8
+detect_indent=false
+detect_indent_width=false
+indent_mode=2
+
+[project]
+name=zen-mini-tut
+base_path=/home/klyone/Escritorio/zen-mini-tut
+description=
+file_patterns=
+
+[long line marker]
+long_line_behaviour=1
+long_line_column=72
+
+[files]
+current_page=0
+FILE_NAME_0=3431;C;0;EUTF-8;1;1;0;%2Fhome%2Fklyone%2FEscritorio%2F7sols%2Fzen-sw%2Fkernel%2Fnic%2Fzen_nic.c;0;4
+FILE_NAME_1=291;C;0;EUTF-8;1;1;0;%2Fhome%2Fklyone%2FEscritorio%2F7sols%2Fzen-sw%2Fkernel%2Fnic%2Fzen_nic.h;0;4
+FILE_NAME_2=366;Make;0;EUTF-8;1;1;0;%2Fhome%2Fklyone%2FEscritorio%2F7sols%2Fzen-sw%2Fkernel%2FMakefile;0;4
+
+[VTE]
+last_dir=/home/klyone/Escritorio/7sols/zen-sw/kernel
+
+[build-menu]
+NF_03_LB=Make Clean
+NF_03_CM=make clean
+NF_03_WD=
