@@ -1,0 +1,378 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Pandoc Template used by Seven Solution to generate pdf from markdown
+%% files.
+%%
+%% Authors: 
+%%	- Benoit Rat (Seven Solutions, www.sevensols.com)
+%%
+%% GNU Lesser General Public License Usage
+%% This file may be used under the terms of the GNU Lesser
+%% General Public License version 2.1 as published by the Free Software
+%% Foundation and appearing in the file LICENSE.LGPL included in the
+%% packaging of this file.  Please review the following information to
+%% ensure the GNU Lesser General Public License version 2.1 requirements
+%% will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper,oneside,$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$]{$documentclass$}
+\usepackage{amssymb,amsmath}
+\usepackage[left=2.2cm,right=2.2cm,top=3cm,bottom=3cm]{geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Xetex.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{ifxetex,ifluatex}
+\ifxetex
+  \usepackage{fontspec,xltxtra,xunicode}
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+\else
+  \ifluatex
+    \usepackage{fontspec}
+    \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \else
+    \usepackage[utf8]{inputenc}
+  \fi
+\fi
+
+
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex,
+              colorlinks=true,
+              urlcolor=blue,
+              anchorcolor=blue,
+              linkcolor=blue]{hyperref}
+\else
+  \usepackage[unicode=true,
+              colorlinks=true,
+              linkcolor=blue]{hyperref}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Generic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(url)$
+\usepackage{url}
+$endif$
+
+\usepackage{calc}
+\hypersetup{breaklinks=true, pdfborder={0 0 0}}
+\usepackage{pbox}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Environment for code formatting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(listings)$
+\usepackage{listings}
+$endif$
+$if(lhs)$
+\lstnewenvironment{code}
+{\lstset{language=Haskell,basicstyle=\small\ttfamily}}
+{}
+$endif$
+
+$if(bg-color)$
+% redefine env verbatim to be used to hold the code of any language.
+\usepackage{framed}
+\let\oldverbatim=\verbatim
+\renewenvironment{verbatim}
+{
+\begin{snugshade}
+\begin{oldverbatim}
+}
+{ 
+\end{oldverbatim}
+\end{snugshade}
+}
+
+% Redefined \textttt to add it background color
+\usepackage{soul, color, url}
+\sethlcolor{shadecolor}
+\let\OldTexttt\texttt
+\renewcommand{\texttt}[1]{\OldTexttt{\hl{#1}}}
+
+% Add highlighting environment (when background color)
+$if(highlighting-macros)$
+	$highlighting-macros$
+	\renewenvironment{Shaded}{
+	\begingroup
+    \fontsize{10pt}{12pt}\selectfont
+    \begin{snugshade}
+   	}
+   	{
+   		\end{snugshade}
+   		\endgroup
+   	}
+$endif$
+
+%% Define the background (shade) color
+\usepackage{color}
+\definecolor{shadecolor}{RGB}{$bg-color$} 
+
+$else$
+	$if(highlighting-macros)$
+		% Add highlighting environment (without background color)
+		$highlighting-macros$
+	$endif$
+$endif$
+
+\usepackage{alltt}
+
+\let\oldquote=\quote
+\renewenvironment{quote}
+{
+\begingroup
+\sffamily %sans-serif font
+\slshape %slated (almost italic)
+\fontsize{10pt}{12pt}\selectfont
+}
+{ 
+\endgroup
+}
+
+
+$if(verbatim-in-note)$
+%\usepackage{fancyvrb}
+$endif$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Graphics & Tables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Tables
+$if(tables)$
+\usepackage{ctable}
+$endif$
+
+\usepackage{longtable} % tables
+
+\usepackage{float} % provides the H option for float placement
+
+\let\origfigure=\figure
+\let\endorigfigure=\endfigure
+\renewenvironment{figure}[1][]{%
+  \origfigure[H]
+}{%
+  \endorigfigure
+}
+
+%% Images 
+\usepackage{graphicx}
+% We will generate all images so they have a width \maxwidth. This means
+% that they will get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+\else\Gin@nat@width\fi}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=\maxwidth,
+	height=7cm, keepaspectratio]{#1}}
+
+$if(subscript)$
+\newcommand{\textsubscr}[1]{\ensuremath{_{\scriptsize\textrm{#1}}}}
+$endif$
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Lang (TODO: clean this, without breaking)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(lang)$
+\ifxetex
+  \usepackage{polyglossia}
+  \newcommand{\euro}{€}
+  \setmainlanguage{$lang$}
+\else
+  \usepackage{babel}
+  \usepackage{eurosym}
+\fi
+$endif$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% List 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{enumitem}
+
+$if(fancy-enums)$
+% Redefine labelwidth for lists; otherwise, the enumerate package will 
+% cause markers to extend beyond the left margin.
+\makeatletter\AtBeginDocument{%
+  \renewcommand{\@listi}
+    	{
+	\setlength{\labelwidth}{4em}
+	\leftmargin=25pt
+	\rightmargin=0pt
+	\labelsep=7pt
+	\labelwidth=20pt
+	\itemindent=0pt
+	\listparindent=0pt
+	\topsep=2pt plus 2pt minus 2pt
+	\partopsep=0pt plus 1pt minus 10pt
+	\parsep=1pt plus 1pt
+	\itemsep=\parsep
+	}
+}\makeatother
+\usepackage{enumerate}
+$endif$
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Chapters & Section
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% chapters
+\usepackage{titlesec}
+\titleformat{\chapter}[block]
+  {\normalfont\HUGE\bfseries}{\LARGE\thechapter.}{1ex}{}
+\titlespacing*{\chapter}{0pt}{-19pt}{0pt}
+
+
+% Sections
+$if(numbersections)$
+$else$
+\setcounter{secnumdepth}{0} 
+$endif$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Footer & Header
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allows verbatim text in footnotes
+$endif$
+
+
+\usepackage{fancyhdr}
+\fancyhf{}
+\fancyhead[R]{\nouppercase{\leftmark}}
+\fancyfoot[L]{\footnotesize{$for(author)$$author$$sep$ \and $endfor$}}
+\fancyfoot[R]{\thepage}
+\pagestyle{fancy}                      % Sets fancy header and footer
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(natbib)$
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+$endif$
+$if(biblatex)$
+\usepackage{biblatex}
+$if(biblio-files)$
+\bibliography{$biblio-files$}
+$endif$
+$endif$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Title page (like texinfo)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(title)$
+\title{$title$}
+$endif$
+$if(author)$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$endif$
+$if(date)$
+\date{$date$}
+$endif$
+
+\makeatletter
+\def\thickhrulefill{\leavevmode \leaders \hrule height 1pt\hfill \kern \z@}
+\renewcommand{\maketitle}{\begin{titlepage}%
+    \let\footnotesize\small
+    \let\footnoterule\relax
+    \parindent \z@
+    \reset@font
+    \null\vfil
+    \begin{flushleft}
+      \Huge \textbf{\@title}
+    \end{flushleft}
+    \par
+    \hrule height 4pt
+    \par
+    \begin{flushright}
+      \large \@date \par
+    \end{flushright}
+    \vskip 500\p@
+    \vfil\null
+    \begin{flushleft}
+      \Large \textbf{\@author}
+    \end{flushleft}
+    \hrule height 2pt
+  \end{titlepage}%
+  \setcounter{footnote}{0}%
+}
+\makeatother
+
+%======================================================================%
+%======================================================================%
+
+\begin{document}
+
+$if(title)$
+\maketitle
+$endif$
+
+$for(include-before)$
+$include-before$
+$endfor$
+
+$if(toc)$
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
+$endif$
+
+$if(lof)$
+\listoffigures
+\clearpage
+$endif$
+
+$if(lot)$
+\listoftables
+\clearpage
+$endif$
+
+$body$
+
+$if(natbib)$
+$if(biblio-files)$
+$if(biblio-title)$
+$if(book-class)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+\bibliography{$biblio-files$}
+$endif$
+$endif$
+$if(biblatex)$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+$endif$
+
+$for(include-after)$
+$include-after$
+$endfor$
+
+\end{document}
