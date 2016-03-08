@@ -35,7 +35,7 @@ LOT=-V lot
 
 ## Obtain the version
 VERSION= v0.1
-DATE= 08 Jul. 2015
+DATE= $(shell date +"%d %b. %Y")
 
 ifneq "$(TEMPLATE)" ""
 TEMPLATEARG=--template=$(TEMPLATE)
